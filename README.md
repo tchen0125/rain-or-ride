@@ -12,10 +12,10 @@
 
 ### Structure
 
-1. Ingestion
-2. ETL
-3. Profiling
-4. Analytics
+1. Ingestion: commands or codes to download data
+2. ETL: transform or clean data and store them in HDFS
+3. Profiling: provides insights for indivial data
+4. Analytics: statistical analysis on all dataset (correlation, etc.)
 
 ## Data Access in HDFS
 
@@ -48,3 +48,6 @@ group::r-x
 mask::rwx
 other::r-x
 ```
+
+
+##
