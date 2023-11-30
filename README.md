@@ -10,7 +10,12 @@
 |  Luka Tragic  | lt2205 |
 | Terrance Chen | tc3325 |
 
-### Purpose
+### Structure
+
+1. Ingestion
+2. ETL
+3. Profiling
+4. Analytics
 
 ## Data Access in HDFS
 
@@ -19,7 +24,12 @@
 You can access the data resides in HDFS, by issueing the following command in dataproc.
 
 ```
-hdfs dfs -ls /user/bj2351_nyu_edu/final
+hdfs dfs -ls /user/bj2351_nyu_edu/final/data
+
+Found 3 items
+-rw-rwxr--+  1 bj2351_nyu_edu bj2351_nyu_edu     121642 2023-11-30 14:57 final/data/MTA-Daily-Ridership-Data-Beginning-2020.csv
+-rw-rwxr--+  1 bj2351_nyu_edu bj2351_nyu_edu    5310911 2023-11-30 14:57 final/data/hourly-weather-nyc-2022.csv
+-rw-rwxr--+  1 bj2351_nyu_edu bj2351_nyu_edu   20090169 2023-11-30 14:57 final/data/motor-vehicle-collisions-2022.csv
 ```
 
 ### Permissions
