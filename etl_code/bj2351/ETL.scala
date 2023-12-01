@@ -6,10 +6,10 @@ val inputFile = ingestionPath + "hourly-weather-nyc-2022.csv"
 
 val df: DataFrame = spark.read.option("header", true).csv(inputFile)
 
+// We will only use data from the Central Park.
 // The STATION column is not needed.
-// We only collect data from the Central Park.
 
-val weatherDF: DataFrame = df.drop("STATION")
+val weatherDF: DataFrame = df.filter('STATION === "72505394728").drop("STATION")
 
 // 1. select useful columns for each report type
 val fm15 = weatherDF
@@ -31,8 +31,9 @@ val sod2 = sod1.withColumn("Snow", col("DailyWeather").contains("SN")).na.fill(M
 val sod3 = sod2.withColumn("Mist", col("DailyWeather").contains("BR")).na.fill(Map("Mist" -> false))
 val sod4 = sod3.withColumn("Haze", col("DailyWeather").contains("HZ")).na.fill(Map("Haze" -> false))
 val sod5 = sod4.withColumn("Fog", col("DailyWeather").contains("FG")).na.fill(Map("Fog" -> false))
-val sodWithB = sod5.withColumn("date_only", to_date(col("DATE"))).orderBy("date_only").drop("SOURCE", "DATE")
-val sodResult = sodWithB.select("date_only", "Sunrise", "Sunset", "Rain", "Snow", "Mist", "Haze", "Fog")
+val sodWithB = sod5.withColumn("date_only", to_date(col("DATE"))).orderBy("date_only").drop("SOURCE")
+val sodResult = sodWithB.select("date_only", "DATE", "Sunrise", "Sunset", "Rain", "Snow", "Mist", "Haze", "Fog")
+println(sodResult.count())
 sodResult.show(5)
 
 // 3. Processing FM15 (Hourly Weather Data)
