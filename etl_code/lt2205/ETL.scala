@@ -4,7 +4,7 @@ import org.apache.spark.sql.functions._
 val spark = SparkSession.builder.appName("RidershipData").getOrCreate()
 import spark.implicits._
 
-val inputFile = "MTA-Daily-Ridership-Data-Beginning-2020.csv"
+val inputFile = "/user/bj2351_nyu_edu/final/data/MTA-daily-ridership.csv"
 val dailyRidershipDF = spark.read.option("header", true).csv(inputFile)
 
 val columnsToDrop = Seq(
