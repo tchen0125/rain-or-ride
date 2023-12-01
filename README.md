@@ -32,12 +32,31 @@ Found 3 items
 -rw-rwxr--+  1 bj2351_nyu_edu bj2351_nyu_edu   20090169 2023-11-30 14:57 final/data/motor-vehicle-collisions-2022.csv
 ```
 
+Please ask bj2351@nyu.edu to get your access granted to use `ls` command on `final` directory.
+Otherwise, you will not be able to list contents under the directory.
+
+Also, under `/user/bj2351_nyu_edu/final` directory, there are several directories:
+1. `data` directory for data ingested, which exist in a raw form
+2. `cleaned` directory for data cleaned after ETL process.
+
+
 ### Permissions
 
-The directory has following permissions:
+The directories have following permissions:
 
 ```
-hdfs dfs -getfacl /user/bj2351_nyu_edu/final
+$ hdfs dfs -getfcal /user/bj2351_nyu_edu
+# file: /user/bj2351_nyu_edu/final
+# owner: bj2351_nyu_edu
+# group: bj2351_nyu_edu
+user::rwx
+user:lt2205_nyu_edu:--x
+user:tc3180_nyu_edu:--x
+group::---
+mask::--x
+other::---
+
+$ hdfs dfs -getfacl /user/bj2351_nyu_edu/final
 # file: /user/bj2351_nyu_edu/final
 # owner: bj2351_nyu_edu
 # group: bj2351_nyu_edu
