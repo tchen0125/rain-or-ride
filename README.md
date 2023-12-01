@@ -38,6 +38,42 @@ Otherwise, you will not be able to list contents under the directory.
 Also, under `/user/bj2351_nyu_edu/final` directory, there are several directories:
 1. `data` directory for data ingested, which exist in a raw form
 2. `cleaned` directory for data cleaned after ETL process.
+    - `weather/cond`: weather conditions such as rain, snow, haze, etc. for each day in 2022
+    - `weather/agg`: aggregatated weather data for each day, such as temperature (min, max, avg)
+
+
+
+For weather data, you can access the file in your spark-shell with the code below.
+The filename changes every time we run ETL code, and it's cryptic to read.
+Therefore the filename must be identified programmatically as suggested below:
+
+```scala
+import org.apache.hadoop.fs.{FileSystem, Path}
+import org.apache.hadoop.conf.Configuration
+
+val configuration = new Configuration()
+val fileSystem = FileSystem.get(configuration)
+
+val path = "/user/bj2351_nyu_edu/final/cleaned/weather/"
+
+def getFilePath(path: Path): String =  {
+  val file = fileSystem
+      .listStatus(path)
+      .filter(_.getPath.getName.endsWith(".csv"))
+
+  file.head.getPath.toString
+}
+
+val aggPath = new Path(path + "agg")
+val condPath = new Path(path + "cond")
+println(aggPath)
+println(condPath)
+val aggFile = getFilePath(aggPath)
+val condFile = getFilePath(condPath)
+
+val aggDf = spark.read.option("header", true).csv(aggFile)
+val condDf = spark.read.option("header", true).csv(condFile)
+```
 
 
 ### Permissions
@@ -69,4 +105,4 @@ other::r-x
 ```
 
 
-##
+
