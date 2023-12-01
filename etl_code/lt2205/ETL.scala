@@ -1,10 +1,7 @@
-import org.apache.spark.sql.{SparkSession, DataFrame}
 import org.apache.spark.sql.functions._
+import java.sql.Date
 
-val spark = SparkSession.builder.appName("RidershipData").getOrCreate()
-import spark.implicits._
-
-val inputFile = "MTA-Daily-Ridership-Data-Beginning-2020.csv"
+val inputFile = "/user/bj2351_nyu_edu/final/data/MTA-daily-ridership.csv"
 val dailyRidershipDF = spark.read.option("header", true).csv(inputFile)
 
 val columnsToDrop = Seq(
@@ -19,12 +16,18 @@ val columnsToDrop = Seq(
 
 val cleanedDF = dailyRidershipDF.drop(columnsToDrop: _*)
 
-val startDate = "01/01/2022"
-val endDate = "12/31/2022"
+val cleanDF = cleanedDF.withColumn("Date", to_date($"Date", "MM/dd/yyyy"))
 
-val filteredDF = cleanedDF.filter($"Date".between(startDate, endDate))
+val filteredDF = cleanDF.filter(col("Date").between(startDate, endDate))
+
+
+val startDate = Date.valueOf("2022-01-01")
+val endDate = Date.valueOf("2022-12-31")
+
+val filteredDF = cleanDF.filter(col("Date").between(startDate, endDate))
 
 filteredDF.show()
 
-filteredDF.write.option("header", "true").csv("/user/lt2205_nyu_edu/daily-ridership-clean.csv")
+filteredDF.write.option("header", "true").csv("/user/lt2205_nyu_edu/daily-ridership")
+filteredDF.write.option("header", "true").csv("/user/bj2351_nyu_edu/final/cleaned/daily-ridership")
 
