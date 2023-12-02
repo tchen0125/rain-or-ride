@@ -12,6 +12,7 @@ def getFilePath(path: Path): String =  {
     file.head.getPath.toString
 }
 
+// Data Preparation
 
 val cleanedPath = "/user/bj2351_nyu_edu/final/cleaned/"
 val weatherAggPath = getFilePath(new Path(cleanedPath + "weather/agg"))
@@ -56,4 +57,52 @@ val ridership   = spark.read.option("header", true).csv(ridershipPath)
 
 val full = weatherAgg.join(weatherCond, "date").join(collision, "date").join(ridership, "date")
 
+// Data Analysis
+
 full.show()
+
+// Does a single weather condition affect the number of crashses?
+
+val conditions = List("Rain", "Snow", "Fog", "Haze", "Mist")
+
+println("Weather Conditions vs. Crashes")
+conditions.foreach(cd => {
+  full
+    .groupBy(col(cd) === "true")
+    .agg(
+      sum("crash").alias("tt crash"),
+      sum("ppl i").alias("ppl injured"),
+      sum("ppl k").alias("ppl killed"),
+      count("crash").alias("days"))
+    .withColumn("ppl injured per day", ($"ppl injured" / $"days"))
+    .withColumn("ppl injured per day", ($"ppl killed" / $"days"))
+    .withColumn("crashes per day", round($"tt crash" / $"days"))
+    .show()
+})
+
+println("Weather Conditions vs. Subway Ridership")
+conditions.foreach(cd => {
+  full
+    .groupBy(col(cd) === "true")
+    .agg(
+      sum("sub").alias("sub"),
+      count("sub").alias("days")
+    )
+    .withColumn("per day", round(col("sub") / col("days")))
+    .show()
+})
+
+println("Weather Conditions vs. Bus Ridership")
+conditions.foreach(cd => {
+  full
+    .groupBy(col(cd) === "true")
+    .agg(
+      sum("bus").alias("bus"),
+      count("sub").alias("days")
+    )
+    .withColumn("per day", round(col("bus") / col("days")))
+    .show()
+})
+
+
+
