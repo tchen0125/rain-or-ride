@@ -68,7 +68,7 @@ val conditions = List("Rain", "Snow", "Fog", "Haze", "Mist")
 println("Crashes and Ridership on each Weather Condition")
 val conditionAnalysis = conditions.map(cd => (cd, {
   full
-    .groupBy(col(cd) === "true")
+    .groupBy(col(cd))
     .agg(
       count("crash").alias("days"),
       sum("crash").alias("tt crash"),
