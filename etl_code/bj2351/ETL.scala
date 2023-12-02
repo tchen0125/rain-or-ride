@@ -25,6 +25,18 @@ val sod  = weatherDF
   .drop("REPORT_TYPE")
   .select("DATE", "SOURCE", "DailyWeather", "Sunrise", "Sunset")
 
+val weatherConditions =
+  weatherDF
+  .withColumn("weather", explode(split($"DailyWeather", " ")))
+  .select("weather")
+  .distinct()
+  .filter($"weather" =!= "")
+  .as[String]
+  .collect()
+  .toList
+
+println("Weather Conditions" + weatherConditions)
+
 // 2. Processing SOD (adding boolean columns)
 val sod1 = sod.withColumn("Rain", col("DailyWeather").contains("RA")).na.fill(Map("Rain" -> false))
 val sod2 = sod1.withColumn("Snow", col("DailyWeather").contains("SN")).na.fill(Map("Snow" -> false))
