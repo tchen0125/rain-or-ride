@@ -61,7 +61,7 @@ val full = weatherAgg.join(weatherCond, "date").join(collision, "date").join(rid
 
 full.show()
 
-// Does a single weather condition affect the number of crashses?
+// Does a single weather condition have something to do with other numbers?
 
 val conditions = List("Rain", "Snow", "Fog", "Haze", "Mist")
 
