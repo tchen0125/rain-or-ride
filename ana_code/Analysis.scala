@@ -76,10 +76,15 @@ val conditionAnalysis = conditions.map(cd => (cd, {
       sum("sub").alias("sub"),
       sum("bus").alias("bus"),
       count("crash").alias("days"))
-    .withColumn("ppl injured per day", ($"ppl injured" / $"days"))
-    .withColumn("ppl killed per day", ($"ppl killed" / $"days"))
+    .withColumn("ppl injured per day", round($"ppl injured" / $"days", 3))
+    .withColumn("ppl killed per day", round($"ppl killed" / $"days", 3))
     .withColumn("crashes per day", round($"tt crash" / $"days"))
     .withColumn("sub per day", round(col("sub") / col("days")))
     .withColumn("bus per day", round(col("bus") / col("days")))
 })).toMap
+
+
+conditionAnalysis.foreach((k, v) => {
+  v.show()
+})
 
