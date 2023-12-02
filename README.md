@@ -35,7 +35,7 @@ Found 3 items
 Please ask bj2351@nyu.edu to get your access granted to use `ls` command on `final` directory.
 Otherwise, you will not be able to list contents under the directory.
 
-Also, under `/user/bj2351_nyu_edu/final` directory, there are several directories:
+Also, under `hdfs:///user/bj2351_nyu_edu/final` directory, there are several directories:
 1. `data` directory for data ingested, which exist in a raw form
 2. `cleaned` directory for data cleaned after ETL process.
     - `weather/cond`: weather conditions such as rain, snow, haze, etc. for each day in 2022
