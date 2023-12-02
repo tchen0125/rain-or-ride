@@ -107,27 +107,27 @@ other::r-x
 
 ## Analysis
 
-| Fog = true | tt crash | ppl injured | ppl killed | sub        | bus        | days | ppl injured per day | ppl killed per day | crashes per day | sub per day | bus per day |
+| Fog | tt crash | ppl injured | ppl killed | sub        | bus        | days | ppl injured per day | ppl killed per day | crashes per day | sub per day | bus per day |
 |------------|----------|-------------|------------|------------|------------|------|---------------------|--------------------|-----------------|-------------|-------------|
 | true       | 8416.0   | 4129.0      | 13.0       | 7.691216E7 | 3.1878012E7| 29   | 142.379             | 0.448              | 290.0           | 2652143.0   | 1099242.0   |
 | false      | 95461.0  | 47799.0     | 274.0      | 9.35593719E8| 3.92068812E8| 336  | 142.259             | 0.815              | 284.0           | 2784505.0   | 1166871.0   |
 
-| Mist = true | tt crash | ppl injured | ppl killed | sub         | bus         | days | ppl injured per day | ppl killed per day | crashes per day | sub per day | bus per day |
+| Mist | tt crash | ppl injured | ppl killed | sub         | bus         | days | ppl injured per day | ppl killed per day | crashes per day | sub per day | bus per day |
 |-------------|----------|-------------|------------|-------------|-------------|------|---------------------|--------------------|-----------------|-------------|-------------|
 | true        | 35998.0  | 17774.0     | 78.0       | 3.55289869E8| 1.47911003E8| 126  | 141.063             | 0.619              | 286.0           | 2819761.0   | 1173897.0   |
 | false       | 67879.0  | 34154.0     | 209.0      | 6.5721601E8 | 2.76035821E8| 239  | 142.904             | 0.874              | 284.0           | 2749858.0   | 1154962.0   |
 
-| Rain = true | tt crash | ppl injured | ppl killed | sub         | bus         | days | ppl injured per day | ppl killed per day | crashes per day | sub per day | bus per day |
+| Rain | tt crash | ppl injured | ppl killed | sub         | bus         | days | ppl injured per day | ppl killed per day | crashes per day | sub per day | bus per day |
 |-------------|----------|-------------|------------|-------------|-------------|------|---------------------|--------------------|-----------------|-------------|-------------|
 | true        | 37112.0  | 18576.0     | 87.0       | 3.59742874E8| 1.49923187E8| 130  | 142.892             | 0.669              | 285.0           | 2767253.0   | 1153255.0   |
 | false       | 66765.0  | 33352.0     | 200.0      | 6.52763005E8| 2.74023637E8| 235  | 141.923             | 0.851              | 284.0           | 2777715.0   | 1166058.0   |
 
-| Snow = true | tt crash | ppl injured | ppl killed | sub         | bus         | days | ppl injured per day | ppl killed per day | crashes per day | sub per day | bus per day |
+| Snow | tt crash | ppl injured | ppl killed | sub         | bus         | days | ppl injured per day | ppl killed per day | crashes per day | sub per day | bus per day |
 |-------------|----------|-------------|------------|-------------|-------------|------|---------------------|--------------------|-----------------|-------------|-------------|
 | true        | 4725.0   | 2024.0      | 9.0        | 3.7627331E7 | 1.5598916E7 | 18   | 112.444             | 0.5                | 263.0           | 2090407.0   | 866606.0    |
 | false       | 99152.0  | 49904.0     | 278.0      | 9.74878548E8| 4.08347908E8| 347  | 143.816             | 0.801              | 286.0           | 2809448.0   | 1176795.0   |
 
-| Haze = true | tt crash | ppl injured | ppl killed | sub         | bus         | days | ppl injured per day | ppl killed per day | crashes per day | sub per day | bus per day |
+| Haze | tt crash | ppl injured | ppl killed | sub         | bus         | days | ppl injured per day | ppl killed per day | crashes per day | sub per day | bus per day |
 |-------------|----------|-------------|------------|-------------|-------------|------|---------------------|--------------------|-----------------|-------------|-------------|
 | true        | 8360.0   | 4169.0      | 31.0       | 8.5338812E7 | 3.6530611E7 | 30   | 138.967             | 1.033              | 279.0           | 2844627.0   | 1217687.0   |
 | false       | 95517.0  | 47759.0     | 256.0      | 9.27167067E8| 3.87416213E8| 335  | 142.564             | 0.764              | 285.0           | 2767663.0   | 1156466.0   |
