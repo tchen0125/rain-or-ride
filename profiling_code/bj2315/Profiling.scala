@@ -24,11 +24,19 @@ val condFile = getFilePath(condPath)
 val aggDf = spark.read.option("header", true).csv(aggFile)
 val condDf = spark.read.option("header", true).csv(condFile)
 
+aggDf.show()
+condDf.show()
+
 println("Total Number of Rainy days: " + condDf.filter($"Rain" === "true").count())
 println("Total Number of Snowy days: " + condDf.filter($"Snow" === "true").count())
 println("Total Number of Hazy days: " + condDf.filter($"Haze" === "true").count())
 println("Total Number of Misty days: " + condDf.filter($"Mist" === "true").count())
 println("Total Number of Foggy days: " + condDf.filter($"Fog" === "true").count())
+
+condDf
+  .cube("Rain", "Snow", "Haze", "Fog", "Mist")
+  .count()
+  .orderBy("Rain", "Snow", "Haze", "Fog", "Mist").show(1000)
 
 
 
