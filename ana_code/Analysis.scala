@@ -70,12 +70,13 @@ val conditionAnalysis = conditions.map(cd => (cd, {
   full
     .groupBy(col(cd) === "true")
     .agg(
+      count("crash").alias("days"),
       sum("crash").alias("tt crash"),
       sum("ppl i").alias("ppl injured"),
       sum("ppl k").alias("ppl killed"),
       sum("sub").alias("sub"),
-      sum("bus").alias("bus"),
-      count("crash").alias("days"))
+      sum("bus").alias("bus")
+    )
     .withColumn("ppl injured per day", round($"ppl injured" / $"days", 3))
     .withColumn("ppl killed per day", round($"ppl killed" / $"days", 3))
     .withColumn("crashes per day", round($"tt crash" / $"days"))
@@ -84,7 +85,5 @@ val conditionAnalysis = conditions.map(cd => (cd, {
 })).toMap
 
 
-conditionAnalysis.foreach((k, v) => {
-  v.show()
-})
+conditionAnalysis.foreach({ case (k, v) => v.show() })
 
