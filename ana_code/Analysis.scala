@@ -20,19 +20,21 @@ val weatherCondPath = getFilePath(new Path(cleanedPath + "weather/cond"))
 val collisionPath = getFilePath(new Path(cleanedPath + "collisionData"))
 val ridershipPath = getFilePath(new Path(cleanedPath + "daily-ridership"))
 
-val weatherAgg  = spark.read.option("header", true).csv(weatherAggPath)
+val csvOptions = Map("header" -> "true", "inferSchema" -> "true")
+
+val weatherAgg  = spark.read.options(csvOptions).csv(weatherAggPath)
   .withColumnRenamed("date_only", "date")
   .withColumnRenamed("MinTemp", "min t")
   .withColumnRenamed("MaxTemp", "max t")
   .withColumn("AvgTemp", round($"AvgTemp", 1))
   .withColumnRenamed("AvgTemp", "avg t")
 
-val weatherCond = spark.read.option("header", true).csv(weatherCondPath)
+val weatherCond = spark.read.options(csvOptions).csv(weatherCondPath)
   .drop("DATE")
   .withColumnRenamed("date_only", "date")
 
 val collision   =
-  spark.read.option("header", true).csv(collisionPath)
+  spark.read.options(csvOptions).csv(collisionPath)
   .withColumnRenamed("CRASH DATE", "date")
   .withColumnRenamed("CRASH Number", "crash")
   .withColumnRenamed("NUMBER OF PERSONS INJURED_sum", "ppl i")
@@ -44,7 +46,7 @@ val collision   =
   .withColumnRenamed("NUMBER OF MOTORIST INJURED_sum", "mot i")
   .withColumnRenamed("NUMBER OF MOTORIST KILLED_sum", "mot k")
 
-val ridership   = spark.read.option("header", true).csv(ridershipPath)
+val ridership   = spark.read.options(csvOptions).csv(ridershipPath)
   .withColumnRenamed("Date", "date")
   .withColumnRenamed("Subways: Total Estimated Ridership", "sub")
   .withColumnRenamed("Buses: Total Estimated Ridership", "bus")
@@ -86,4 +88,14 @@ val conditionAnalysis = conditions.map(cd => (cd, {
 
 
 conditionAnalysis.foreach({ case (k, v) => v.show() })
+
+val weatherColumns = List("min t", "max t", "avg t", "Sunrise", "Sunset")
+val collAndTransportCols = List("crash", "ppl i", "ppl k", "ped i", "ped k", "cyc i", "cyc k", "mot i", "mot k", "sub", "bus", "lirr", "metro-north", "acc-a-ride", "brdg-tun", "sttn-rw")
+
+weatherColumns.foreach(w => {
+  collAndTransportCols.foreach(d => {
+    val corr = full.stat.corr(w, d)
+    println(s"$w, $d -> $corr")
+  })
+})
 
