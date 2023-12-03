@@ -134,6 +134,8 @@ println(s"Coefficients: ${lrModel.coefficients} Intercept: ${lrModel.intercept}"
 val trainingSummary = lrModel.summary
 
 println(s"R-squared: ${trainingSummary.r2}")
+println(s"T-values: ${trainingSummary.tValues.mkString(", ")}")
+
 
 // Define the new Linear Regression model for 'ppl injured'
 val lrPplInjured = new LinearRegression().setFeaturesCol("features").setLabelCol("ppl i")
