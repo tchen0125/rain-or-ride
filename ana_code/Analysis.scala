@@ -1,5 +1,8 @@
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.conf.Configuration
+import org.apache.spark.ml.feature.VectorAssembler
+import org.apache.spark.ml.regression.LinearRegression
+import org.apache.spark.sql.functions._
 
 val configuration = new Configuration()
 val fileSystem = FileSystem.get(configuration)
@@ -22,18 +25,22 @@ val ridershipPath = getFilePath(new Path(cleanedPath + "daily-ridership"))
 
 val csvOptions = Map("header" -> "true", "inferSchema" -> "true")
 
-val weatherAgg  = spark.read.options(csvOptions).csv(weatherAggPath)
-  .withColumnRenamed("date_only", "date")
-  .withColumnRenamed("MinTemp", "min t")
-  .withColumnRenamed("MaxTemp", "max t")
-  .withColumn("AvgTemp", round($"AvgTemp", 1))
-  .withColumnRenamed("AvgTemp", "avg t")
+val weatherAgg = (
+  spark.read.options(csvOptions).csv(weatherAggPath)
+    .withColumnRenamed("date_only", "date")
+    .withColumnRenamed("MinTemp", "min t")
+    .withColumnRenamed("MaxTemp", "max t")
+    .withColumn("AvgTemp", round($"AvgTemp", 1))
+    .withColumnRenamed("AvgTemp", "avg t")
+)
 
-val weatherCond = spark.read.options(csvOptions).csv(weatherCondPath)
-  .drop("DATE")
-  .withColumnRenamed("date_only", "date")
 
-val collision   =
+val weatherCond = (
+  spark.read.options(csvOptions).csv(weatherCondPath)
+    .drop("DATE")
+    .withColumnRenamed("date_only", "date")
+)
+val collision   = (
   spark.read.options(csvOptions).csv(collisionPath)
   .withColumnRenamed("CRASH DATE", "date")
   .withColumnRenamed("CRASH Number", "crash")
@@ -45,17 +52,19 @@ val collision   =
   .withColumnRenamed("NUMBER OF CYCLIST KILLED_sum", "cyc k")
   .withColumnRenamed("NUMBER OF MOTORIST INJURED_sum", "mot i")
   .withColumnRenamed("NUMBER OF MOTORIST KILLED_sum", "mot k")
+)
 
-val ridership   = spark.read.options(csvOptions).csv(ridershipPath)
-  .withColumnRenamed("Date", "date")
-  .withColumnRenamed("Subways: Total Estimated Ridership", "sub")
-  .withColumnRenamed("Buses: Total Estimated Ridership", "bus")
-  .withColumnRenamed("LIRR: Total Estimated Ridership", "lirr")
-  .withColumnRenamed("Metro-North: Total Estimated Ridership", "metro-north")
-  .withColumnRenamed("Access-A-Ride: Total Scheduled Trips", "acc-a-ride")
-  .withColumnRenamed("Bridges and Tunnels: Total Traffic", "brdg-tun")
-  .withColumnRenamed("Staten Island Railway: Total Estimated Ridership", "sttn-rw")
-
+val ridership   = (
+  spark.read.options(csvOptions).csv(ridershipPath)
+    .withColumnRenamed("Date", "date")
+    .withColumnRenamed("Subways: Total Estimated Ridership", "sub")
+    .withColumnRenamed("Buses: Total Estimated Ridership", "bus")
+    .withColumnRenamed("LIRR: Total Estimated Ridership", "lirr")
+    .withColumnRenamed("Metro-North: Total Estimated Ridership", "metro-north")
+    .withColumnRenamed("Access-A-Ride: Total Scheduled Trips", "acc-a-ride")
+    .withColumnRenamed("Bridges and Tunnels: Total Traffic", "brdg-tun")
+    .withColumnRenamed("Staten Island Railway: Total Estimated Ridership", "sttn-rw")
+)
 
 val full = weatherAgg.join(weatherCond, "date").join(collision, "date").join(ridership, "date")
 
@@ -99,3 +108,58 @@ weatherColumns.foreach(w => {
   })
 })
 
+// Feature Engineering
+val assembler = new VectorAssembler().setInputCols(Array("min t", "max t", "sub", "bus")).setOutputCol("features")
+
+val transformedData = assembler.transform(full)
+
+val Array(trainingData, testData) = transformedData.randomSplit(Array(0.7, 0.3))
+
+val lr = new LinearRegression().setFeaturesCol("features").setLabelCol("crash")
+
+val lrModel = lr.fit(trainingData)
+
+val predictions = lrModel.transform(testData)
+
+println(s"Coefficients: ${lrModel.coefficients} Intercept: ${lrModel.intercept}")
+
+val trainingSummary = lrModel.summary
+
+println(s"R-squared: ${trainingSummary.r2}")
+
+// Define the new Linear Regression model for 'ppl injured'
+val lrPplInjured = new LinearRegression().setFeaturesCol("features").setLabelCol("ppl i")
+
+// Fit the model to the training data
+val lrModelPplInjured = lrPplInjured.fit(trainingData)
+
+// Make predictions on the test data
+val predictionsPplInjured = lrModelPplInjured.transform(testData)
+
+// Print the coefficients and intercept for the new model
+println(s"Model for 'ppl injured'")
+println(s"Coefficients: ${lrModelPplInjured.coefficients} Intercept: ${lrModelPplInjured.intercept}")
+
+// Get the summary for the new model
+val trainingSummaryPplInjured = lrModelPplInjured.summary
+
+println(s"R-squared for 'ppl injured': ${trainingSummaryPplInjured.r2}")
+println(s"T-values for 'ppl injured': ${trainingSummaryPplInjured.tValues.mkString(", ")}")
+
+val lrPplKilled = new LinearRegression().setFeaturesCol("features").setLabelCol("ppl k")
+
+val lrModelPplKilled = lrPplKilled.fit(trainingData)
+
+// Make predictions on the test data
+val predictionsPplKilled = lrModelPplKilled.transform(testData)
+
+// Print the coefficients and intercept for the new model
+println(s"Model for 'ppl k'")
+println(s"Coefficients: ${lrModelPplKilled.coefficients} Intercept: ${lrModelPplKilled.intercept}")
+
+// Get the summary for the new model
+val trainingSummaryPplKilled = lrModelPplKilled.summary
+
+// Print R-squared and T-values for the new model
+println(s"R-squared for 'ppl k': ${trainingSummaryPplKilled.r2}")
+println(s"T-values for 'ppl k': ${trainingSummaryPplKilled.tValues.mkString(", ")}")
