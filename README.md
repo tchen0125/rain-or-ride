@@ -277,6 +277,7 @@ Sunset | sttn-rw | -0.01026206856407811
 
 Multiple Linear Regression for Collision Data and Weather/Ridership
 Independent Variable = m(Dependent Variable) + m(Dependent Variable) + m(Dependent Variable) + m(Dependent Variable) + y
+
 Crash = "min t" +"max t"+ "sub" + "bus"
 Coefficients: [-0.4954345439262705,1.070617034335645,2.4074178661484523E-5,-1.2671052425481895E-5] Intercept: 191.37396866922882
 R-squared: 0.32806364323159776
