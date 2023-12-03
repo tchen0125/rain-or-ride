@@ -68,6 +68,8 @@ val ridership   = (
 
 val full = weatherAgg.join(weatherCond, "date").join(collision, "date").join(ridership, "date")
 
+full.cache()
+
 // Data Analysis
 
 full.show()
@@ -101,12 +103,18 @@ conditionAnalysis.foreach({ case (k, v) => v.show() })
 val weatherColumns = List("min t", "max t", "avg t", "Sunrise", "Sunset")
 val collAndTransportCols = List("crash", "ppl i", "ppl k", "ped i", "ped k", "cyc i", "cyc k", "mot i", "mot k", "sub", "bus", "lirr", "metro-north", "acc-a-ride", "brdg-tun", "sttn-rw")
 
+println("Pearson Correlation between weather and traffic data")
+
+
 weatherColumns.foreach(w => {
   collAndTransportCols.foreach(d => {
     val corr = full.stat.corr(w, d)
     println(s"$w, $d -> $corr")
   })
 })
+
+full.unpersist()
+
 
 // Feature Engineering
 val assembler = new VectorAssembler().setInputCols(Array("min t", "max t", "sub", "bus")).setOutputCol("features")
