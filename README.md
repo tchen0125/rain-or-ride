@@ -82,23 +82,8 @@ import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.conf.Configuration
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-val spark: SparkSession = SparkSession.builder().appName("CSV Reader").getOrCreate()
-
-val configuration = new Configuration()
-val fileSystem = FileSystem.get(configuration)
-
 val directoryPath = new Path("/user/bj2351_nyu_edu/final/cleaned/collisionData")
-
-def getFilePath(directoryPath: Path): String = {
-  val file = fileSystem
-    .listStatus(directoryPath)
-    .filter(_.getPath.getName.endsWith(".csv"))
-
-  file.head.getPath.toString
-}
-
 val csvFilePath = getFilePath(directoryPath)
-
 val df: DataFrame = spark.read.option("header", "true").csv(csvFilePath)
 
 df.show()
@@ -112,21 +97,7 @@ import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.conf.Configuration
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-val spark: SparkSession = SparkSession.builder().appName("CSV Reader").getOrCreate()
-
-val configuration = new Configuration()
-val fileSystem = FileSystem.get(configuration)
-
 val directoryPath = new Path("/user/bj2351_nyu_edu/final/cleaned/motor-vehicle-collision")
-
-def getFilePath(directoryPath: Path): String = {
-  val file = fileSystem
-    .listStatus(directoryPath)
-    .filter(_.getPath.getName.endsWith(".csv"))
-
-  file.head.getPath.toString
-}
-
 val csvFilePath = getFilePath(directoryPath)
 
 val df: DataFrame = spark.read.option("header", "true").csv(csvFilePath)
