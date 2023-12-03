@@ -163,6 +163,11 @@ other::r-x
 | true        | 8360.0   | 4169.0      | 31.0       | 8.5338812E7 | 3.6530611E7 | 30   | 138.967             | 1.033              | 279.0           | 2844627.0   | 1217687.0   |
 | false       | 95517.0  | 47759.0     | 256.0      | 9.27167067E8| 3.87416213E8| 335  | 142.564             | 0.764              | 285.0           | 2767663.0   | 1156466.0   |
 
+![sdf](screenshots/weather-transport-corr-viz.png)
+
+<details>
+    <summary>Corr Data</summary>
+    
 | Var 1 | Var 2 | Pearson Corr |
 | :-: | :-: | :-: |
 min t | crash | 0.3542349612104814
@@ -245,6 +250,7 @@ Sunset | metro-north | 0.054975858069086905
 Sunset | acc-a-ride | 0.04907194339823081
 Sunset | brdg-tun | 0.42628235099576584
 Sunset | sttn-rw | -0.01026206856407811
+</details>
 
 Multiple Linear Regression for Collision Data and Weather/Ridership
 Independent Variable = m(Dependent Variable) + m(Dependent Variable) + m(Dependent Variable) + m(Dependent Variable) + y
