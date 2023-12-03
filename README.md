@@ -279,7 +279,7 @@ Multiple Linear Regression for Collision Data and Weather/Ridership
 Independent Variable = m(Dependent Variable) + m(Dependent Variable) + m(Dependent Variable) + m(Dependent Variable) + y
 
 Crash = "min t" +"max t"+ "sub" + "bus" \
-Coefficients: [-0.4954345439262705,1.070617034335645,2.4074178661484523E-5,-1.2671052425481895E-5] Intercept: 191.37396866922882 \
+Coefficients: [-0.4954345439262705,1.070617034335645,2.4074178661484523E-5,-1.2671052425481895E-5] Intercept: 191.37396866922882\
 R-squared: 0.32806364323159776 \
 T-values: -1.312836895222827, 3.0157621088365447, 2.4257693352086154, -0.5721152220702017, 21.08138445027665 \
 
