@@ -40,6 +40,9 @@ Also, under `hdfs:///user/bj2351_nyu_edu/final` directory, there are several dir
 2. `cleaned` directory for data cleaned after ETL process.
     - `weather/cond`: weather conditions such as rain, snow, haze, etc. for each day in 2022
     - `weather/agg`: aggregatated weather data for each day, such as temperature (min, max, avg)
+    - `daily-ridership`: cleaned daily ridership data
+    - `collisionData` : aggregated collision data for analysis
+    - `motor-vehicle-collision` : cleaned collision data
 
 
 
@@ -133,6 +136,14 @@ user:tc3180_nyu_edu:rwx
 group::r-x
 mask::rwx
 other::r-x
+```
+
+### Run Your Codes
+
+The codes (profiling, ETL, analysis) can be run using the following command in NYU HPC dataproc:
+
+```
+spark-shell --deploy-mode client -i {YOUR_CODE}
 ```
 
 
