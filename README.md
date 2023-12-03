@@ -75,6 +75,66 @@ val aggDf = spark.read.option("header", true).csv(aggFile)
 val condDf = spark.read.option("header", true).csv(condFile)
 ```
 
+For motor vehicle cleaned collision count data you can use this script that is similar to the above:
+
+```scala
+import org.apache.hadoop.fs.{FileSystem, Path}
+import org.apache.hadoop.conf.Configuration
+import org.apache.spark.sql.{DataFrame, SparkSession}
+
+val spark: SparkSession = SparkSession.builder().appName("CSV Reader").getOrCreate()
+
+val configuration = new Configuration()
+val fileSystem = FileSystem.get(configuration)
+
+val directoryPath = new Path("/user/bj2351_nyu_edu/final/cleaned/collisionData")
+
+def getFilePath(directoryPath: Path): String = {
+  val file = fileSystem
+    .listStatus(directoryPath)
+    .filter(_.getPath.getName.endsWith(".csv"))
+
+  file.head.getPath.toString
+}
+
+val csvFilePath = getFilePath(directoryPath)
+
+val df: DataFrame = spark.read.option("header", "true").csv(csvFilePath)
+
+df.show()
+
+
+```
+For motor vehicle collision cleaned data without aggregation 
+
+```scala
+import org.apache.hadoop.fs.{FileSystem, Path}
+import org.apache.hadoop.conf.Configuration
+import org.apache.spark.sql.{DataFrame, SparkSession}
+
+val spark: SparkSession = SparkSession.builder().appName("CSV Reader").getOrCreate()
+
+val configuration = new Configuration()
+val fileSystem = FileSystem.get(configuration)
+
+val directoryPath = new Path("/user/bj2351_nyu_edu/final/cleaned/motor-vehicle-collision")
+
+def getFilePath(directoryPath: Path): String = {
+  val file = fileSystem
+    .listStatus(directoryPath)
+    .filter(_.getPath.getName.endsWith(".csv"))
+
+  file.head.getPath.toString
+}
+
+val csvFilePath = getFilePath(directoryPath)
+
+val df: DataFrame = spark.read.option("header", "true").csv(csvFilePath)
+
+df.show()
+
+
+```
 
 ### Permissions
 
@@ -215,5 +275,21 @@ Sunset | acc-a-ride | 0.04907194339823081
 Sunset | brdg-tun | 0.42628235099576584
 Sunset | sttn-rw | -0.01026206856407811
 
+Multiple Linear Regression for Collision Data and Weather/Ridership
+Independent Variable = m(Dependent Variable) + m(Dependent Variable) + m(Dependent Variable) + m(Dependent Variable) + y
+Crash = "min t" +"max t"+ "sub" + "bus"
+Coefficients: [-0.4954345439262705,1.070617034335645,2.4074178661484523E-5,-1.2671052425481895E-5] Intercept: 191.37396866922882
+R-squared: 0.32806364323159776
+T-values: -1.312836895222827, 3.0157621088365447, 2.4257693352086154, -0.5721152220702017, 21.08138445027665
 
+
+ppl injured = "min t" +"max t"+ "sub" + "bus"
+Coefficients: [0.19576336297463307,0.7278969976793589,2.9592430959578923E-5,-4.5496535301402454E-5] Intercept: 58.25975435701208
+R-squared for 'ppl injured': 0.5166896621880659
+T-values for 'ppl injured': 0.748115406148318, 2.95696069318998, 4.300226763183985, -2.962523694528308, 9.255451437415037
+
+ppl killed = "min t" +"max t"+ "sub" + "bus"
+Coefficients: [-0.0020871325384426475,0.007215248346745538,5.270624772673839E-7,-1.16071061004801E-6] Intercept: 0.34057163497324794
+R-squared for 'ppl k': 0.018731209264052917
+T-values for 'ppl k': -0.15658700694835556, 0.5754338691880505, 1.5036311925158352, -1.4838020769741196, 1.0621991373528936
 
