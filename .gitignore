@@ -1,0 +1,7 @@
+# editor
+/vscode
+*.swp
+
+
+# ingestion artifacts
+*.csv
